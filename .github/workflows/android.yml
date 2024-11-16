@@ -56,6 +56,10 @@ jobs:
             --prefix=/tmp/osmesa \
             --cross-file "../build-crossfile" \
             -Dplatforms=android \
+            -Dxmlconfig=disabled \
+            -Dcpp_rtti=false \
+            -Ddri3=enabled \
+            -Dllvm=enabled \
             -Dplatform-sdk-version=30 \
             -Dandroid-stub=true \
             -Dxlib-lease=disabled \
