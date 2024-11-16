@@ -49,7 +49,7 @@ jobs:
           ninja -C "build-android" install
           cd ..
           envsubst <android-${{matrix.arch}} >build-crossfile
-          git clone --depth 1 --branch patch-1 https://github.com/Vera-Firefly/mesa2304
+          git clone --depth 1 --branch patch-1 https://github.com/wotheful/mesa2304
           cd mesa2304
           git apply --reject --whitespace=fix ../mesa-zink.diff || echo "git apply failed"
           meson setup "build-android" \
