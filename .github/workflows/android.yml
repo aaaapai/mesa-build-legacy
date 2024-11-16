@@ -56,7 +56,7 @@ jobs:
             --prefix=/tmp/osmesa \
             --cross-file "../build-crossfile" \
             -Dplatforms=android \
-            -Dplatform-sdk-version=25 \
+            -Dplatform-sdk-version=30 \
             -Dandroid-stub=true \
             -Dxlib-lease=disabled \
             -Degl=disabled \
