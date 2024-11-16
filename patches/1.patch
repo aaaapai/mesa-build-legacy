@@ -1,0 +1,125 @@
++++ ./src/vulkan/wsi/wsi_common_display.c
+@@ -176,6 +176,12 @@
+ 
+ static uint64_t fence_sequence;
+ 
++#ifdef __ANDROID__
++static void thread_signal_handler (int signum) {
++   pthread_exit (0);
++}
++#endif
++
+ ICD_DEFINE_NONDISP_HANDLE_CASTS(wsi_display_mode, VkDisplayModeKHR)
+ ICD_DEFINE_NONDISP_HANDLE_CASTS(wsi_display_connector, VkDisplayKHR)
+ 
+@@ -1341,7 +1347,9 @@
+       .events = POLLIN
+    };
+ 
++#ifndef __ANDROID__
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
++#endif
+    for (;;) {
+       int ret = poll(&pollfd, 1, -1);
+       if (ret > 0) {
+@@ -1369,9 +1377,22 @@
+ static void
+ wsi_display_stop_wait_thread(struct wsi_display *wsi)
+ {
++#ifdef __ANDROID__
++   struct sigaction actions;
++   memset (&actions, 0, sizeof (actions));
++   sigemptyset (&actions.sa_mask);
++   actions.sa_flags = 0;
++   actions.sa_handler = thread_signal_handler;
++   sigaction (SIGUSR2, &actions, NULL);
++#endif
++
+    mtx_lock(&wsi->wait_mutex);
+    if (wsi->wait_thread) {
++#ifndef __ANDROID__
+       pthread_cancel(wsi->wait_thread);
++#else
++      pthread_kill(wsi->wait_thread, SIGUSR2);
++#endif
+       pthread_join(wsi->wait_thread, NULL);
+       wsi->wait_thread = 0;
+    }
+@@ -2215,7 +2236,9 @@
+ 
+    int udev_fd = udev_monitor_get_fd(mon);
+ 
++#ifndef __ANDROID__
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
++#endif
+ 
+    for (;;) {
+       nfds_t nfds = 1;
+@@ -2340,6 +2363,15 @@
+    struct wsi_display *wsi =
+       (struct wsi_display *) wsi_device->wsi[VK_ICD_WSI_PLATFORM_DISPLAY];
+ 
++#ifdef __ANDROID__
++   struct sigaction actions;
++   memset (&actions, 0, sizeof (actions));
++   sigemptyset (&actions.sa_mask);
++   actions.sa_flags = 0;
++   actions.sa_handler = thread_signal_handler;
++   sigaction (SIGUSR2, &actions, NULL);
++#endif
++
+    if (wsi) {
+       wsi_for_each_connector(connector, wsi) {
+          wsi_for_each_display_mode(mode, connector) {
+@@ -2351,7 +2383,11 @@
+       wsi_display_stop_wait_thread(wsi);
+ 
+       if (wsi->hotplug_thread) {
++#ifndef __ANDROID__
+          pthread_cancel(wsi->hotplug_thread);
++#else
++         pthread_kill(wsi->hotplug_thread, SIGUSR2);
++#endif
+          pthread_join(wsi->hotplug_thread, NULL);
+       }
+
+ +++ ./src/util/detect_os.h
+@@ -24,7 +24,7 @@
+  * Android defines __linux__, so DETECT_OS_LINUX and DETECT_OS_POSIX will
+  * also be defined.
+  */
+-#if defined(__ANDROID__)
++#if 0
+ #define DETECT_OS_ANDROID 1
+ #endif
+ 
++++ ./include/vulkan/vk_android_native_buffer.h	
+@@ -1,5 +1,5 @@
+ /* MESA: A hack to avoid #ifdefs in driver code. */
+-#ifdef __ANDROID__
++#if 0
+ 
+ #include <cutils/native_handle.h>
+ #if ANDROID_API_LEVEL < 28
+
+--- a/src/util/u_process.c
++++ b/src/util/u_process.c
+@@ -103,7 +103,7 @@
+ {
+    return strdup(program_invocation_short_name);
+ }
+-#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__APPLE__) || DETECT_OS_ANDROID || defined(__NetBSD__)
++#elif defined(__FreeBSD__) || defined(__DragonFly__) || defined(__APPLE__) || defined(__ANDROID__) || defined(__NetBSD__)
+ #if defined(__NetBSD__)
+ #    include <sys/param.h>
+ #endif
+@@ -170,7 +170,7 @@
+ #endif
+ 
+ #if defined(GET_PROGRAM_NAME_NOT_AVAILABLE)
+-#if defined(__OpenBSD__) || defined(__NetBSD__) || defined(__UCLIBC__) || DETECT_OS_ANDROID
++#if defined(__OpenBSD__) || defined(__NetBSD__) || defined(__UCLIBC__) || defined(__ANDROID__)
+ /* This is a hack. It's said to work on OpenBSD, NetBSD and GNU.
+  * Rogelio M.Serrano Jr. reported it's also working with UCLIBC. It's
+  * used as a last resort, if there is no documented facility available. */
+  
