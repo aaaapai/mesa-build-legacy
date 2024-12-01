@@ -55,10 +55,11 @@ jobs:
           meson setup "build-android" \
             --prefix=/tmp/osmesa \
             --cross-file "../build-crossfile" \
+            -Dllvm=enabled \
+            -Dshared-llvm=enabled \
             -Dplatforms=android \
             -Dxmlconfig=disabled \
             -Dcpp_rtti=false \
-            -Ddri3=enabled \
             -Dplatform-sdk-version=30 \
             -Dandroid-stub=true \
             -Dxlib-lease=disabled \
