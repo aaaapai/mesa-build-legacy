@@ -69,8 +69,8 @@ jobs:
             -Dglx=disabled \
             -Dopengl=true \
             -Dosmesa=true \
-            -Dvulkan-drivers=swrast \
-            -Dgallium-drivers=zink,swrast \
+            -Dvulkan-drivers= \
+            -Dgallium-drivers=zink \
             -Dshared-glapi=false \
             -Dbuildtype=release
           ninja -C "build-android" install
