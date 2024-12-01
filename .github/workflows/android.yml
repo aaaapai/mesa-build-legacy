@@ -49,14 +49,14 @@ jobs:
           ninja -C "build-android" install
           cd ..
           envsubst <android-${{matrix.arch}} >build-crossfile
-          git clone --depth 1 --branch patch-1 https://github.com/aaaapai/mesa2304
+          git clone --depth 1 --branch patch-1 https://github.com/wotheful/mesa2304
           cd mesa2304
           git apply --reject --whitespace=fix ../mesa-zink.diff || echo "git apply failed"
           meson setup "build-android" \
             --prefix=/tmp/osmesa \
             --cross-file "../build-crossfile" \
-            -Dllvm=enabled \
-            -Dshared-llvm=enabled \
+            -Dllvm=disabled \
+            -Dshared-llvm=disabled \
             -Ddri3=enabled \
             -Dplatforms=android \
             -Dxmlconfig=disabled \
@@ -71,7 +71,7 @@ jobs:
             -Dosmesa=true \
             -Dvulkan-drivers=swrast \
             -Dgallium-drivers=zink,swrast \
-            -Dshared-glapi=true \
+            -Dshared-glapi=false \
             -Dbuildtype=release
           ninja -C "build-android" install
           cp /tmp/osmesa/lib/libOSMesa.so.8.0.0 /tmp/osmesa/lib/libOSMesa_8.so
