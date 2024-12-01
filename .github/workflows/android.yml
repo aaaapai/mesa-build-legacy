@@ -57,6 +57,7 @@ jobs:
             --cross-file "../build-crossfile" \
             -Dllvm=enabled \
             -Dshared-llvm=enabled \
+            -Ddri3=enabled \
             -Dplatforms=android \
             -Dxmlconfig=disabled \
             -Dcpp_rtti=false \
