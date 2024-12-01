@@ -56,7 +56,7 @@ jobs:
             --prefix=/tmp/osmesa \
             --cross-file "../build-crossfile" \
             -Dllvm=enabled \
-            -Dshared-llvm=disabled \
+            -Dshared-llvm=enabled \
             -Ddri3=enabled \
             -Dplatforms=android \
             -Dxmlconfig=disabled \
@@ -69,9 +69,9 @@ jobs:
             -Dglx=disabled \
             -Dopengl=true \
             -Dosmesa=true \
-            -Dvulkan-drivers= \
+            -Dvulkan-drivers=swrast \
             -Dgallium-drivers=zink,swrast \
-            -Dshared-glapi=false \
+            -Dshared-glapi=true \
             -Dbuildtype=release
           ninja -C "build-android" install
           cp /tmp/osmesa/lib/libOSMesa.so.8.0.0 /tmp/osmesa/lib/libOSMesa_8.so
