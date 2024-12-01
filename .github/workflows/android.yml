@@ -56,7 +56,7 @@ jobs:
             --prefix=/tmp/osmesa \
             --cross-file "../build-crossfile" \
             -Dllvm=enabled \
-            -Dshared-llvm=enabled \
+            -Dshared-llvm=disabled \
             -Ddri3=enabled \
             -Dplatforms=android \
             -Dxmlconfig=disabled \
