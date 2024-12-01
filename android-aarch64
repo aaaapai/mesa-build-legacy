@@ -4,6 +4,7 @@ c = ['ccache', '$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/aarc
 cpp = ['ccache', '$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android30-clang++', '-DANDROID', '-Ofast', '-DVK_USE_PLATFORM_ANDROID_KHR', '-fPIC', '-DPIC', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-fwhole-program-vtables', '-D__USE_GNU', '-mllvm', '-polly', '-Wno-incompatible-function-pointer-types', '-Wno-error=implicit-function-declaration', '-Wno-int-conversion', '-flto=thin', '-D__USE_GNU']
 nm = '$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm'
 llvm-config = '$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-config'
+LLVM_CONFIG = '$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-config'
 c_ld = 'lld'
 cpp_ld = 'lld'
 strip = '$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'
